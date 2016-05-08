@@ -3,12 +3,11 @@
   "version": "0.0.0",
   "description": "A Website to host Flip Card Game",
   "scripts": {
-    "postinstall": "npm run build",
     "server": "node start.js",
     "build": "webpack --progress --config webpack.production.config.js",
     "test": "nyc ava --fail-fast --verbose --require babel-register",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
-    "clean": "rm build/app.js"
+    "clean": "rm dist/app.js"
   },
   "repository": {
     "type": "git",
@@ -20,12 +19,8 @@
     "react",
     "quickstart"
   ],
-  "author": "Mark Fayngersh",
+  "author": "Volodymyr Syzov",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/pheuter/essential-react/issues"
-  },
-  "homepage": "https://github.com/pheuter/essential-react",
   "devDependencies": {
     "autoprefixer": "^6.0.2",
     "ava": "^0.12.0",
@@ -41,7 +36,6 @@
     "enzyme": "^2.0.0",
     "express": "^4.12.3",
     "extract-text-webpack-plugin": "^0.8.2",
-    "flip-card-game": "git@github.com:sizov/flip-card-game.git#v0.0.8",
     "nyc": "^5.6.0",
     "postcss-loader": "^0.6.0",
     "postcss-nested": "^1.0.0",
@@ -54,6 +48,8 @@
     "webpack-node-externals": "^1.2.0"
   },
   "dependencies": {
+    "flip-card-game": "git@github.com:sizov/flip-card-game.git#v0.0.9",
+    "flip-card-game-component": "git@github.com:sizov/flip-card-game-component.git#v0.1.4",
     "babel-core": "^6.5.2",
     "babel-polyfill": "^6.5.0",
     "babel-runtime": "^6.5.0",

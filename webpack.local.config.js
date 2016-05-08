@@ -48,7 +48,13 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                loader: ExtractTextPlugin.extract('style-loader', 'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader')
+
+                /**
+                 * was like this but CSS names were changed twice, so disabled name change:
+                 * loader: ExtractTextPlugin.extract('style-loader', 'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader')
+                 */
+
+                loader: ExtractTextPlugin.extract('style-loader', 'css-loader')
             }
         ]
     },
@@ -64,4 +70,4 @@ module.exports = {
         require('postcss-nested') // Enable nested rules, like in Sass
     ]
 
-}
+};

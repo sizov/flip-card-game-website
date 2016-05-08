@@ -1,7 +1,7 @@
 import React from 'react';
-import CardsBoard from '../components/cardsBoard/CardsBoard';
-import styles from './style.css';
+import {FlipCardBoard} from 'flip-card-game-component';
 import {FlipCardGame, flipCardGameEvents} from 'flip-card-game';
+import 'flip-card-game-component/dist/style.css';
 
 const getCard = (flipped, id, image) => ({flipped, id, image});
 const game = new FlipCardGame();
@@ -18,7 +18,7 @@ function getCards(nativeGameGards) {
     });
 }
 
-export default class LoginPage extends React.Component {
+export default class Example extends React.Component {
 
     constructor(props) {
         super(props);
@@ -79,8 +79,9 @@ export default class LoginPage extends React.Component {
                     {playersNodes}
                 </select>
 
-                <CardsBoard cards={this.state.cards}
-                            onCardClick={this.onCardClickHandler}/>
+                <FlipCardBoard
+                    cards={this.state.cards}
+                    onCardClick={this.onCardClickHandler}/>
             </div>
         );
     }
