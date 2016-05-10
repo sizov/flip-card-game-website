@@ -1,7 +1,6 @@
 import express from 'express';
 const app = express();
 
-
 /************************************************************
  *
  * Express routes for:
@@ -13,25 +12,25 @@ const app = express();
 
 // Serve application file depending on environment
 app.get('/example.js', (req, res) => {
-  if (process.env.PRODUCTION) {
-    res.sendFile(__dirname + '/dist-example/example.js');
-  } else {
-    res.redirect('//localhost:9090/dist-example/example.js');
-  }
+    if (process.env.PRODUCTION) {
+        res.sendFile(__dirname + '/dist-example/example.js');
+    } else {
+        res.redirect('//localhost:9090/dist-example/example.js');
+    }
 });
 
 // Serve aggregate stylesheet depending on environment
 app.get('/style.css', (req, res) => {
-  if (process.env.PRODUCTION) {
-    res.sendFile(__dirname + '/dist-example/style.css');
-  } else {
-    res.redirect('//localhost:9090/dist-example/style.css');
-  }
+    if (process.env.PRODUCTION) {
+        res.sendFile(__dirname + '/dist-example/style.css');
+    } else {
+        res.redirect('//localhost:9090/dist-example/style.css');
+    }
 });
 
 // Serve index page
 app.get('*', (req, res) => {
-  res.sendFile(__dirname + '/dist-example/index.html');
+    res.sendFile(__dirname + '/dist-example/index.html');
 });
 
 
@@ -44,20 +43,20 @@ app.get('*', (req, res) => {
  *************************************************************/
 
 if (!process.env.PRODUCTION) {
-  const webpack = require('webpack');
-  const WebpackDevServer = require('webpack-dev-server');
-  const config = require('./webpack.local.config');
+    const webpack = require('webpack');
+    const WebpackDevServer = require('webpack-dev-server');
+    const config = require('./webpack.local.config');
 
-  new WebpackDevServer(webpack(config), {
-    publicPath: config.output.publicPath,
-    hot: true,
-    noInfo: true,
-    historyApiFallback: true
-  }).listen(9090, 'localhost', (err, result) => {
-    if (err) {
-      console.log(err);
-    }
-  });
+    new WebpackDevServer(webpack(config), {
+        publicPath: config.output.publicPath,
+        hot: true,
+        noInfo: true,
+        historyApiFallback: true
+    }).listen(9090, 'localhost', (err, result) => {
+        if (err) {
+            console.log(err);
+        }
+    });
 }
 
 
@@ -69,8 +68,35 @@ if (!process.env.PRODUCTION) {
 
 const port = process.env.PORT || 8080;
 const server = app.listen(port, () => {
-  const host = server.address().address;
-  const port = server.address().port;
+    const host = server.address().address;
+    const port = server.address().port;
 
-  console.log('Essential React listening at http://%s:%s', host, port);
+    console.log('Essential React listening at http://%s:%s', host, port);
+});
+
+
+/*****************
+ *
+ * Vlad's Socket IO setup
+ *
+ ****************/
+
+// Setup basic express server
+var io = require('socket.io')(server);
+
+io.on('connection', function (socket) {
+
+    console.log('IO connection happened');
+
+    // when the client emits 'new message', this listens and executes
+    socket.on('new message', function (data) {
+
+        console.log('!!!!!!!!!!!!!!! new message');
+
+        // we tell the client to execute 'new message'
+        socket.broadcast.emit('new message', {
+            username: socket.username,
+            message: data
+        });
+    });
 });

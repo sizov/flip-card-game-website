@@ -1,20 +1,22 @@
+require('./socketTest/socketTest');
+
+
 import React from 'react';
 import {FlipCardBoard} from 'flip-card-game-component';
 import {FlipCardGame, flipCardGameEvents} from 'flip-card-game';
 import 'flip-card-game-component/dist/style.css';
 
-const getCard = (flipped, id, image) => ({flipped, id, image});
 const game = new FlipCardGame();
 const gamePlayers = game.getPlayers();
 const gameCards = game.getCards();
 
-function getCards(nativeGameGards) {
+function generateCards(nativeGameGards) {
     return nativeGameGards.map(function (nativeGameCard) {
-        return getCard(
-            nativeGameCard.getState() !== 'back',
-            nativeGameCard.getId(),
-            nativeGameCard.getPairId()
-        );
+        return {
+            flipped: nativeGameCard.getState() !== 'back',
+            id: nativeGameCard.getId(),
+            image: nativeGameCard.getPairId()
+        };
     });
 }
 
@@ -24,7 +26,7 @@ export default class Example extends React.Component {
         super(props);
 
         const that = this;
-        const renderCards = () => that.setState({cards: getCards(gameCards)});
+        const renderCards = () => that.setState({cards: generateCards(gameCards)});
 
         game.on(flipCardGameEvents.CARD_FLIP_EVENT, renderCards);
         game.on(flipCardGameEvents.PLAYER_MISSED_PAIR_EVENT, function () {
@@ -32,12 +34,13 @@ export default class Example extends React.Component {
             setTimeout(renderCards, 1000);
         });
         game.on(flipCardGameEvents.GAME_OVER_EVENT,
-            (data) => alert(`Game over, winner: ${data.winner.getId()}`));
+            (data) => alert(`Game over, winner: ${data.winner.getId()}`)
+        );
 
         this.state = {
             players: gamePlayers,
             currentPlayer: gamePlayers[0],
-            cards: getCards(gameCards)
+            cards: generateCards(gameCards)
         };
 
         this.onCardClickHandler = this.onCardClickHandler.bind(this);
