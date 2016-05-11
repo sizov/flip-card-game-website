@@ -45,9 +45,20 @@ socket.on('playerAssign', function (data) {
     eventEmitter.emit('playerAssign', data);
 });
 
+socket.on('playerMove', function (data) {
+    console.log('playerMove', data);
+    eventEmitter.emit('playerMove', data);
+});
+
+function playerMove(move) {
+    console.log('playerMove', move);
+    socket.emit('playerMove', move)
+}
+
 
 module.exports = {
     on: eventEmitter.on.bind(eventEmitter),
     emit: eventEmitter.emit.bind(eventEmitter),
-    getPlayerId: () => playerId
+    getPlayerId: () => playerId,
+    playerMove
 };

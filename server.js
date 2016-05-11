@@ -104,4 +104,12 @@ io.on('connection', function (socket) {
             players.push(data.playerId);
         }
     });
+
+    socket.on('playerMove', function (move) {
+        console.log('playerMove');
+
+        //TODO: verify move validity in current game instance
+
+        socket.broadcast.emit('playerMove', move);
+    })
 });

@@ -22,18 +22,31 @@ function generateCards(nativeGameGards) {
 
 export default class Example extends React.Component {
 
+    updateCardsAndComponent(data) {
+        game.flipCard({
+            cardId: data.cardId,
+            playerId: data.playerId
+        });
+
+        this.setState({
+            cards: generateCards(gameCards)
+        })
+    }
+
     constructor(props) {
         super(props);
 
         const that = this;
-        const renderCards = () => that.setState({cards: generateCards(gameCards)});
 
         socketTest.on('playerAssign', function (data) {
-            console.log('Game received player join event', data);
-
             that.setState({
                 currentPlayer: gamePlayers[data.playerId]
             })
+        });
+
+        socketTest.on('playerMove', function (data) {
+            console.log('RECEIVED INOUT playerMove', data);
+            that.updateCardsAndComponent(data);
         });
 
         //game.on(flipCardGameEvents.CARD_FLIP_EVENT, renderCards);
@@ -56,10 +69,13 @@ export default class Example extends React.Component {
     }
 
     onCardClickHandler(cardData) {
-        game.flipCard({
+        const playerMove = {
             cardId: cardData.id,
             playerId: this.state.currentPlayer.getId()
-        });
+        };
+
+        socketTest.playerMove(playerMove);
+        this.updateCardsAndComponent(playerMove);
     }
 
     onPlayerChangeHandler(e) {
@@ -73,18 +89,16 @@ export default class Example extends React.Component {
     }
 
     render() {
-        console.log('this.state.currentPlayer:', this.state.currentPlayer);
-
-        const playersNodes = this.state.players.map(function (player) {
-            const playerId = player.getId();
-            return <option value={playerId}
-                           key={playerId}>
-                {playerId}
-            </option>
-        });
-
         var playerSelectionComponent;
         if (typeof this.state.currentPlayer !== 'undefined') {
+            const playersNodes = this.state.players.map(function (player) {
+                const playerId = player.getId();
+                return <option value={playerId}
+                               key={playerId}>
+                    {playerId}
+                </option>
+            });
+
             playerSelectionComponent = <div>
                 Current player:
                 <select
@@ -97,9 +111,7 @@ export default class Example extends React.Component {
 
         return (
             <div>
-
                 {playerSelectionComponent}
-
                 <FlipCardBoard
                     cards={this.state.cards}
                     onCardClick={this.onCardClickHandler}/>
