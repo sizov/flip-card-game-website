@@ -1,6 +1,6 @@
 require('./socketTest/socketTest');
 
-
+import socketTest from './socketTest/socketTest';
 import React from 'react';
 import {FlipCardBoard} from 'flip-card-game-component';
 import {FlipCardGame, flipCardGameEvents} from 'flip-card-game';
@@ -22,24 +22,45 @@ function generateCards(nativeGameGards) {
 
 export default class Example extends React.Component {
 
+    updateCardsAndComponent(data) {
+        game.flipCard({
+            cardId: data.cardId,
+            playerId: data.playerId
+        });
+
+        this.setState({
+            cards: generateCards(gameCards)
+        })
+    }
+
     constructor(props) {
         super(props);
 
         const that = this;
-        const renderCards = () => that.setState({cards: generateCards(gameCards)});
 
-        game.on(flipCardGameEvents.CARD_FLIP_EVENT, renderCards);
-        game.on(flipCardGameEvents.PLAYER_MISSED_PAIR_EVENT, function () {
-            //render with delay so that user can see mistake
-            setTimeout(renderCards, 1000);
+        socketTest.on('playerAssign', function (data) {
+            that.setState({
+                currentPlayer: gamePlayers[data.playerId]
+            })
         });
-        game.on(flipCardGameEvents.GAME_OVER_EVENT,
-            (data) => alert(`Game over, winner: ${data.winner.getId()}`)
-        );
+
+        socketTest.on('playerMove', function (data) {
+            console.log('RECEIVED INOUT playerMove', data);
+            that.updateCardsAndComponent(data);
+        });
+
+        //game.on(flipCardGameEvents.CARD_FLIP_EVENT, renderCards);
+        //game.on(flipCardGameEvents.PLAYER_MISSED_PAIR_EVENT, function () {
+        //    //render with delay so that user can see mistake
+        //    setTimeout(renderCards, 1000);
+        //});
+        //game.on(flipCardGameEvents.GAME_OVER_EVENT,
+        //    (data) => alert(`Game over, winner: ${data.winner.getId()}`)
+        //);
 
         this.state = {
             players: gamePlayers,
-            currentPlayer: gamePlayers[0],
+            currentPlayer: undefined,
             cards: generateCards(gameCards)
         };
 
@@ -48,10 +69,13 @@ export default class Example extends React.Component {
     }
 
     onCardClickHandler(cardData) {
-        game.flipCard({
+        const playerMove = {
             cardId: cardData.id,
             playerId: this.state.currentPlayer.getId()
-        });
+        };
+
+        socketTest.playerMove(playerMove);
+        this.updateCardsAndComponent(playerMove);
     }
 
     onPlayerChangeHandler(e) {
@@ -65,23 +89,29 @@ export default class Example extends React.Component {
     }
 
     render() {
-        const playersNodes = this.state.players.map(function (player) {
-            const playerId = player.getId();
-            return <option value={playerId}
-                           key={playerId}>
-                {playerId}
-            </option>
-        });
+        var playerSelectionComponent;
+        if (typeof this.state.currentPlayer !== 'undefined') {
+            const playersNodes = this.state.players.map(function (player) {
+                const playerId = player.getId();
+                return <option value={playerId}
+                               key={playerId}>
+                    {playerId}
+                </option>
+            });
 
-        return (
-            <div>
+            playerSelectionComponent = <div>
                 Current player:
                 <select
                     defaultValue={this.state.currentPlayer.getId()}
                     onChange={this.onPlayerChangeHandler}>
                     {playersNodes}
                 </select>
+            </div>
+        }
 
+        return (
+            <div>
+                {playerSelectionComponent}
                 <FlipCardBoard
                     cards={this.state.cards}
                     onCardClick={this.onCardClickHandler}/>
