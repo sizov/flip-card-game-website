@@ -1,6 +1,6 @@
 require('./socketTest/socketTest');
 
-
+import socketTest from './socketTest/socketTest';
 import React from 'react';
 import {FlipCardBoard} from 'flip-card-game-component';
 import {FlipCardGame, flipCardGameEvents} from 'flip-card-game';
@@ -28,18 +28,26 @@ export default class Example extends React.Component {
         const that = this;
         const renderCards = () => that.setState({cards: generateCards(gameCards)});
 
-        game.on(flipCardGameEvents.CARD_FLIP_EVENT, renderCards);
-        game.on(flipCardGameEvents.PLAYER_MISSED_PAIR_EVENT, function () {
-            //render with delay so that user can see mistake
-            setTimeout(renderCards, 1000);
+        socketTest.on('playerAssign', function (data) {
+            console.log('Game received player join event', data);
+
+            that.setState({
+                currentPlayer: gamePlayers[data.playerId]
+            })
         });
-        game.on(flipCardGameEvents.GAME_OVER_EVENT,
-            (data) => alert(`Game over, winner: ${data.winner.getId()}`)
-        );
+
+        //game.on(flipCardGameEvents.CARD_FLIP_EVENT, renderCards);
+        //game.on(flipCardGameEvents.PLAYER_MISSED_PAIR_EVENT, function () {
+        //    //render with delay so that user can see mistake
+        //    setTimeout(renderCards, 1000);
+        //});
+        //game.on(flipCardGameEvents.GAME_OVER_EVENT,
+        //    (data) => alert(`Game over, winner: ${data.winner.getId()}`)
+        //);
 
         this.state = {
             players: gamePlayers,
-            currentPlayer: gamePlayers[0],
+            currentPlayer: undefined,
             cards: generateCards(gameCards)
         };
 
@@ -65,6 +73,8 @@ export default class Example extends React.Component {
     }
 
     render() {
+        console.log('this.state.currentPlayer:', this.state.currentPlayer);
+
         const playersNodes = this.state.players.map(function (player) {
             const playerId = player.getId();
             return <option value={playerId}
@@ -73,14 +83,22 @@ export default class Example extends React.Component {
             </option>
         });
 
-        return (
-            <div>
+        var playerSelectionComponent;
+        if (typeof this.state.currentPlayer !== 'undefined') {
+            playerSelectionComponent = <div>
                 Current player:
                 <select
                     defaultValue={this.state.currentPlayer.getId()}
                     onChange={this.onPlayerChangeHandler}>
                     {playersNodes}
                 </select>
+            </div>
+        }
+
+        return (
+            <div>
+
+                {playerSelectionComponent}
 
                 <FlipCardBoard
                     cards={this.state.cards}

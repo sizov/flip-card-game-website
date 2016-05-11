@@ -81,22 +81,27 @@ const server = app.listen(port, () => {
  *
  ****************/
 
+var players = [];
+
 // Setup basic express server
 var io = require('socket.io')(server);
 
 io.on('connection', function (socket) {
-
     console.log('IO connection happened');
 
-    // when the client emits 'new message', this listens and executes
-    socket.on('new message', function (data) {
+    socket.emit('playerAssignRequest', {
+        playerId: players.length
+    });
 
-        console.log('!!!!!!!!!!!!!!! new message');
+    socket.on('playerAssignResponse', function (data) {
+        console.log('playerAssignResponse');
 
-        // we tell the client to execute 'new message'
-        socket.broadcast.emit('new message', {
-            username: socket.username,
-            message: data
-        });
+        if (data.userSelection) {
+            socket.emit('playerAssign', {
+                playerId: data.playerId
+            });
+
+            players.push(data.playerId);
+        }
     });
 });
