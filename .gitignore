@@ -1,4 +1,6 @@
-dist
+# Enabling committing /dist because this is the folder that gets
+# deployed to prod
+#dist
 
 # Logs
 logs

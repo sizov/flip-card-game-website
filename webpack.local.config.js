@@ -1,5 +1,6 @@
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var PACKAGE_JSON = require('./package.json');
 
 /**
  * This is the Webpack configuration file for local development. It contains
@@ -27,7 +28,7 @@ module.exports = {
     // by the dev server for dynamic hot loading.
     output: {
         path: __dirname + "/dist-example/",
-        filename: "example.js",
+        filename: PACKAGE_JSON.name + ".js",
         publicPath: "http://localhost:9090/dist-example/"
     },
 
