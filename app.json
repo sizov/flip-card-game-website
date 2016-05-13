@@ -1,6 +1,6 @@
 {
-  "name": "Essential React",
-  "description": "A minimal skeleton for building testable React apps using Babel",
+  "name": "Flip card game",
+  "description": "A simple flip card game example",
   "keywords": [
     "react",
     "babel",
