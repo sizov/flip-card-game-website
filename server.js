@@ -11,26 +11,26 @@ const app = express();
  ************************************************************/
 
 // Serve application file depending on environment
-app.get('/example.js', (req, res) => {
+app.get('/flip-card-game-website.js', (req, res) => {
     if (process.env.PRODUCTION) {
-        res.sendFile(__dirname + '/dist-example/example.js');
+        res.sendFile(__dirname + '/dist/flip-card-game-website.js');
     } else {
-        res.redirect('//localhost:9090/dist-example/example.js');
+        res.redirect('//localhost:9090/dist/flip-card-game-website.js');
     }
 });
 
 // Serve aggregate stylesheet depending on environment
 app.get('/style.css', (req, res) => {
     if (process.env.PRODUCTION) {
-        res.sendFile(__dirname + '/dist-example/style.css');
+        res.sendFile(__dirname + '/dist/style.css');
     } else {
-        res.redirect('//localhost:9090/dist-example/style.css');
+        res.redirect('//localhost:9090/dist/style.css');
     }
 });
 
 // Serve index page
 app.get('*', (req, res) => {
-    res.sendFile(__dirname + '/dist-example/index.html');
+    res.sendFile(__dirname + '/dist/index.html');
 });
 
 

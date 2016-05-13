@@ -10,8 +10,7 @@ module.exports = {
     entry: "./src/example",
 
     output: {
-        libraryTarget: 'umd',
-        path: __dirname + "/dist-deploy/",
+        path: __dirname + "/dist/",
         filename: PACKAGE_JSON.name + ".js"
     },
 

@@ -4,6 +4,7 @@
   "description": "A Website to host Flip Card Game",
   "scripts": {
     "server": "node start.js",
+    "server-prod": "PRODUCTION=true node start.js",
     "build": "webpack --progress --config webpack.production.config.js",
     "test": "nyc ava --fail-fast --verbose --require babel-register",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
