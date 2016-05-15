@@ -1,5 +1,4 @@
 var webpack = require('webpack');
-var nodeExternals = require('webpack-node-externals');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var PACKAGE_JSON = require('./package.json');
 
