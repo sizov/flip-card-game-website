@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "description": "A Website to host Flip Card Game",
   "scripts": {
+    "postinstall": "npm run build",
     "server": "node start.js",
-    "server-prod": "PRODUCTION=true node start.js",
-    "build": "webpack --progress --config webpack.production.config.js",
+    "build": "webpack -p --progress --config webpack.production.config.js",
     "test": "nyc ava --fail-fast --verbose --require babel-register",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "clean": "rm dist/app.js"
@@ -35,7 +35,6 @@
     "coveralls": "^2.11.2",
     "css-loader": "^0.18.0",
     "enzyme": "^2.0.0",
-    "express": "^4.12.3",
     "extract-text-webpack-plugin": "^0.8.2",
     "nyc": "^5.6.0",
     "postcss-loader": "^0.6.0",
@@ -45,19 +44,19 @@
     "sinon": "^1.17.2",
     "style-loader": "^0.12.3",
     "webpack": "^1.12.14",
-    "webpack-dev-server": "^1.14.1",
-    "webpack-node-externals": "^1.2.0"
+    "webpack-dev-server": "^1.14.1"
   },
   "dependencies": {
     "babel-core": "^6.5.2",
     "babel-polyfill": "^6.5.0",
     "babel-runtime": "^6.5.0",
-    "express": "^4.13.4",
+    "express": "^4.12.3",
     "flip-card-game": "https://github.com/sizov/flip-card-game/tarball/master",
     "flip-card-game-component": "https://github.com/sizov/flip-card-game-component/tarball/master",
     "react": "^15.0.1",
     "react-dom": "^15.0.1",
     "socket.io": "^1.4.6",
-    "wolfy87-eventemitter": "^5.0.0"
+    "wolfy87-eventemitter": "^5.0.0",
+    "react-router": "^2.0.0"
   }
 }
