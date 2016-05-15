@@ -1,6 +1,5 @@
-# Enabling committing /dist because this is the folder that gets
-# deployed to prod
-#dist
+dist/flip-card-game-website.js
+dist/style.css
 
 # Logs
 logs
